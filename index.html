@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MSFS 2024 Aircraft Checklists</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        'msfs-blue': '#0066cc',
+                        'msfs-dark': '#1a1a2e',
+                        'accent-green': '#00cc33'
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+
+<body class="bg-gray-100 dark:bg-gray-900 text-gray-900 dark:text-gray-100 transition-colors duration-300">
+    <!-- Header -->
+    <header class="bg-msfs-blue dark:bg-msfs-dark text-white p-6 shadow-lg">
+        <div class="max-w-4xl mx-auto text-center">
+            <h1 class="text-3xl font-bold mb-2">MSFS 2024 Aircraft Checklists</h1>
+            <p class="text-lg opacity-90">Professional flight checklists for Microsoft Flight Simulator</p>
+        </div>
+    </header>
+
+    <!-- Theme Toggle -->
+    <div class="absolute top-4 right-4">
+        <button id="themeToggle" class="p-3 rounded-full bg-white/20 hover:bg-white/30 transition-colors text-white">
+            <span class="text-lg">🌙</span>
+        </button>
+    </div>
+
+    <!-- Main Content -->
+    <main class="max-w-4xl mx-auto p-6">
+        <div class="grid md:grid-cols-2 gap-6 mb-8">
+            <!-- A320neo FBW -->
+            <div
+                class="bg-white dark:bg-gray-800 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 border border-gray-200 dark:border-gray-700 overflow-hidden">
+                <div class="h-48 bg-gradient-to-br from-blue-500 to-blue-700 flex items-center justify-center">
+                    <div class="text-center text-white">
+                        <div class="text-6xl mb-2">✈️</div>
+                        <h3 class="text-xl font-bold">A320neo FBW</h3>
+                        <p class="text-blue-100 text-sm">FlyByWire Simulations</p>
+                    </div>
+                </div>
+                <div class="p-6">
+                    <h2 class="text-xl font-bold mb-3 text-gray-900 dark:text-gray-100">Airbus A320neo</h2>
+                    <p class="text-gray-600 dark:text-gray-400 mb-4">
+                        Complete checklist for the FlyByWire A320neo, covering pre-flight, takeoff, cruise, approach,
+                        and landing procedures.
+                    </p>
+                    <div class="flex items-center justify-between">
+                        <div class="text-sm text-gray-500 dark:text-gray-400">
+                            <span class="font-medium">22 stages</span> • Professional procedures
+                        </div>
+                        <a href="a320.html"
+                            class="px-6 py-2 bg-msfs-blue hover:bg-blue-700 text-white rounded-lg font-medium transition-colors">
+                            Open Checklist
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- CJ4 -->
+            <div
+                class="bg-white dark:bg-gray-800 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 border border-gray-200 dark:border-gray-700 overflow-hidden">
+                <div class="h-48 bg-gradient-to-br from-green-500 to-green-700 flex items-center justify-center">
+                    <div class="text-center text-white">
+                        <div class="text-6xl mb-2">🛩️</div>
+                        <h3 class="text-xl font-bold">CJ4</h3>
+                        <p class="text-green-100 text-sm">Cessna Citation</p>
+                    </div>
+                </div>
+                <div class="p-6">
+                    <h2 class="text-xl font-bold mb-3 text-gray-900 dark:text-gray-100">Cessna Citation CJ4</h2>
+                    <p class="text-gray-600 dark:text-gray-400 mb-4">
+                        Comprehensive checklist for the Cessna Citation CJ4 business jet, including all phases of flight
+                        operations.
+                    </p>
+                    <div class="flex items-center justify-between">
+                        <div class="text-sm text-gray-500 dark:text-gray-400">
+                            <span class="font-medium">18 stages</span> • Business jet procedures
+                        </div>
+                        <a href="cj4.html"
+                            class="px-6 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg font-medium transition-colors">
+                            Open Checklist
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Features Section -->
+        <div class="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-lg border border-gray-200 dark:border-gray-700">
+            <h2 class="text-2xl font-bold mb-4 text-gray-900 dark:text-gray-100">Features</h2>
+            <div class="grid md:grid-cols-3 gap-4">
+                <div class="text-center p-4">
+                    <div class="text-3xl mb-2">📱</div>
+                    <h3 class="font-semibold mb-2">Mobile Optimized</h3>
+                    <p class="text-sm text-gray-600 dark:text-gray-400">Works perfectly on all devices</p>
+                </div>
+                <div class="text-center p-4">
+                    <div class="text-3xl mb-2">🌙</div>
+                    <h3 class="font-semibold mb-2">Dark Mode</h3>
+                    <p class="text-sm text-gray-600 dark:text-gray-400">Easy on the eyes in low light</p>
+                </div>
+                <div class="text-center p-4">
+                    <div class="text-3xl mb-2">💾</div>
+                    <h3 class="font-semibold mb-2">Progress Saved</h3>
+                    <p class="text-sm text-gray-600 dark:text-gray-400">Your progress is automatically saved</p>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-gray-200 dark:bg-gray-800 mt-12 py-6 border-t border-gray-300 dark:border-gray-700">
+        <div class="max-w-4xl mx-auto text-center text-gray-600 dark:text-gray-400">
+            <p>&copy; 2024 MSFS Checklists. Professional flight procedures for simulation use only.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Theme management
+        let isDarkMode = localStorage.getItem('darkMode') === 'true'
+        const themeToggle = document.getElementById('themeToggle')
+
+        function init() {
+            document.documentElement.classList.toggle('dark', isDarkMode)
+            themeToggle.textContent = isDarkMode ? '☀️' : '🌙'
+        }
+
+        function toggleTheme() {
+            isDarkMode = !isDarkMode
+            document.documentElement.classList.toggle('dark', isDarkMode)
+            themeToggle.textContent = isDarkMode ? '☀️' : '🌙'
+            localStorage.setItem('darkMode', isDarkMode)
+        }
+
+        themeToggle.addEventListener('click', toggleTheme)
+        document.addEventListener('DOMContentLoaded', init)
+    </script>
+</body>
+
+</html>

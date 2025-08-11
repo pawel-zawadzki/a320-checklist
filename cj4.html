@@ -1,0 +1,691 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CJ4 Checklist - MSFS 2024</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        'cessna-green': '#00cc33',
+                        'cessna-dark': '#1a1a2e',
+                        'cockpit-blue': '#0066cc'
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+
+<body class="bg-gray-100 dark:bg-gray-900 text-gray-900 dark:text-gray-100 transition-colors duration-300">
+    <!-- Header -->
+    <header class="bg-cessna-green dark:bg-cessna-dark text-white p-4 shadow-lg">
+        <div class="flex justify-between items-center max-w-md mx-auto">
+            <div class="flex items-center space-x-3">
+                <a href="index.html" class="text-white hover:text-gray-200 transition-colors">
+                    <span class="text-lg">←</span>
+                </a>
+                <h1 class="text-lg font-bold">CJ4 Citation</h1>
+            </div>
+            <div class="flex items-center space-x-2">
+                <button id="themeToggle" class="p-2 rounded-full bg-white/20 hover:bg-white/30 transition-colors">
+                    <span class="text-sm">🌙</span>
+                </button>
+                <button id="resetAll" class="px-3 py-1 text-xs bg-red-500 hover:bg-red-600 rounded transition-colors">
+                    Reset
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Progress Bar -->
+    <div class="bg-white dark:bg-gray-800 px-4 py-2 shadow">
+        <div class="max-w-md mx-auto">
+            <div class="flex justify-between items-center mb-1">
+                <span class="text-sm font-medium">Progress</span>
+                <span id="progressText" class="text-sm text-gray-600 dark:text-gray-400">1/18</span>
+            </div>
+            <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
+                <div id="progressBar"
+                    class="bg-cessna-green dark:bg-cockpit-blue h-2 rounded-full transition-all duration-300"
+                    style="width: 5.6%"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <main class="max-w-md mx-auto p-4 min-h-screen">
+        <!-- Stage Title -->
+        <div class="mb-6">
+            <h2 id="stageTitle" class="text-2xl font-bold text-cessna-green dark:text-cockpit-blue mb-2"></h2>
+            <p class="text-sm text-gray-600 dark:text-gray-400">MSFS 2024 • Cessna Citation CJ4</p>
+        </div>
+
+        <!-- Checklist Items -->
+        <div id="checklistContainer" class="space-y-3 mb-8">
+            <!-- Items will be populated by JavaScript -->
+        </div>
+
+        <!-- Stage Completion -->
+        <div id="stageComplete"
+            class="hidden mb-6 p-4 bg-green-100 dark:bg-green-900/30 border border-green-300 dark:border-green-700 rounded-lg">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center">
+                    <span class="text-green-600 dark:text-green-400 mr-2">✅</span>
+                    <span class="font-medium text-green-800 dark:text-green-300">Stage Complete!</span>
+                </div>
+                <div id="autoAdvanceIndicator"
+                    class="hidden flex items-center text-sm text-green-700 dark:text-green-300">
+                    <span class="mr-2">Next stage in</span>
+                    <span id="countdownTimer" class="font-mono font-bold text-lg">2</span>
+                    <button id="cancelAutoAdvance"
+                        class="ml-3 px-2 py-1 text-xs bg-red-500 hover:bg-red-600 text-white rounded transition-colors">
+                        Cancel
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Navigation -->
+        <div
+            class="fixed bottom-0 left-0 right-0 bg-white dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700 p-4">
+            <div class="max-w-md mx-auto flex justify-between items-center">
+                <button id="prevBtn"
+                    class="px-6 py-3 bg-gray-500 text-white rounded-lg font-medium disabled:opacity-50 disabled:cursor-not-allowed transition-colors">
+                    ← Previous
+                </button>
+                <span id="stageCounter" class="text-sm text-gray-600 dark:text-gray-400 font-medium"></span>
+                <button id="nextBtn"
+                    class="px-6 py-3 bg-cessna-green dark:bg-cockpit-blue text-white rounded-lg font-medium disabled:opacity-50 disabled:cursor-not-allowed transition-colors">
+                    Next →
+                </button>
+            </div>
+        </div>
+
+        <!-- Bottom spacing for fixed nav -->
+        <div class="h-24"></div>
+    </main>
+
+    <script>
+        // Checklist Data for CJ4
+        const checklistData = [
+            {
+                title: "Pre-Flight Inspection",
+                items: [
+                    { item: "Exterior Inspection", check: "COMPLETE" },
+                    { item: "Control Surfaces", check: "FREE & CORRECT" },
+                    { item: "Landing Gear", check: "DOWN & LOCKED" },
+                    { item: "Tires & Brakes", check: "CHECK" },
+                    { item: "Fuel Quantity", check: "VERIFY" },
+                    { item: "Oil Level", check: "CHECK" },
+                    { item: "Static Ports", check: "CLEAR" },
+                    { item: "Pitot Cover", check: "REMOVED" },
+                    { item: "Control Locks", check: "REMOVED" }
+                ]
+            },
+            {
+                title: "Cockpit Preparation",
+                items: [
+                    { item: "Parking Brake", check: "SET" },
+                    { item: "Battery Master", check: "ON" },
+                    { item: "Avionics Master", check: "DISPATCH" },
+                    { item: "Fuel Pumps", check: "ON" },
+                    { item: "Bleed Air", check: "OFF" },
+                    { item: "Anti-Ice", check: "OFF" },
+                    { item: "Flaps", check: "UP" },
+                    { item: "Trim", check: "NEUTRAL" },
+                    { item: "Beacon Light", check: "ON" },
+                    { item: "Navigation Lights", check: "ON" }
+                ]
+            },
+            {
+                title: "Engine Start",
+                items: [
+                    { item: "Fuel Flow", check: "VERIFY" },
+                    { item: "Bleed Air", check: "ON" },
+                    { item: "Engine Start Switch", check: "START" },
+                    { item: "N1 Rotation", check: "OBSERVE" },
+                    { item: "Oil Pressure", check: "CHECK" },
+                    { item: "Engine Instruments", check: "NORMAL" },
+                    { item: "Generator", check: "ON" },
+                    { item: "Bleed Air", check: "AUTO" }
+                ]
+            },
+            {
+                title: "After Engine Start",
+                items: [
+                    { item: "Avionics Master", check: "ON" },
+                    { item: "Pressurization", check: "SET" },
+                    { item: "Anti-Ice", check: "AS REQUIRED" },
+                    { item: "Flight Controls", check: "FREE & CORRECT" },
+                    { item: "Flaps", check: "SET FOR TAKEOFF" },
+                    { item: "Taxi Lights", check: "ON" },
+                    { item: "Landing Lights", check: "ON" }
+                ]
+            },
+            {
+                title: "Taxi",
+                items: [
+                    { item: "Parking Brake", check: "RELEASE" },
+                    { item: "Brakes", check: "TEST" },
+                    { item: "Steering", check: "CHECK" },
+                    { item: "Engine Instruments", check: "MONITOR" },
+                    { item: "Fuel Pumps", check: "VERIFY ON" }
+                ]
+            },
+            {
+                title: "Before Takeoff",
+                items: [
+                    { item: "Run-up Complete", check: "VERIFY" },
+                    { item: "Flaps", check: "TAKEOFF SETTING" },
+                    { item: "Trim", check: "SET" },
+                    { item: "Fuel Pumps", check: "ON" },
+                    { item: "Bleed Air", check: "AUTO" },
+                    { item: "Anti-Ice", check: "AS REQUIRED" },
+                    { item: "Landing Lights", check: "ON" },
+                    { item: "Strobe Lights", check: "ON" },
+                    { item: "T/O Config Warning", check: "TEST" }
+                ]
+            },
+            {
+                title: "Takeoff",
+                items: [
+                    { item: "Throttle", check: "FULL POWER" },
+                    { item: "Engine Instruments", check: "CHECK" },
+                    { item: "Airspeed", check: "MONITOR" },
+                    { item: "Rotation Speed", check: "Vr" },
+                    { item: "Gear", check: "UP" },
+                    { item: "Flaps", check: "UP" },
+                    { item: "Climb Power", check: "SET" }
+                ]
+            },
+            {
+                title: "Climb",
+                items: [
+                    { item: "Climb Speed", check: "MAINTAIN" },
+                    { item: "Pressurization", check: "MONITOR" },
+                    { item: "Engine Instruments", check: "CHECK" },
+                    { item: "Landing Lights", check: "OFF" },
+                    { item: "Strobe Lights", check: "OFF" }
+                ]
+            },
+            {
+                title: "Cruise",
+                items: [
+                    { item: "Cruise Power", check: "SET" },
+                    { item: "Cruise Altitude", check: "MAINTAIN" },
+                    { item: "Fuel Management", check: "MONITOR" },
+                    { item: "Weather", check: "MONITOR" },
+                    { item: "Navigation", check: "VERIFY" },
+                    { item: "Pressurization", check: "MONITOR" }
+                ]
+            },
+            {
+                title: "Descent Planning",
+                items: [
+                    { item: "Top of Descent", check: "CALCULATE" },
+                    { item: "Destination Weather", check: "CHECK" },
+                    { item: "Alternate", check: "SELECT" },
+                    { item: "Fuel Remaining", check: "VERIFY" },
+                    { item: "Landing Weight", check: "CALCULATE" },
+                    { item: "Landing Distance", check: "VERIFY" }
+                ]
+            },
+            {
+                title: "Descent",
+                items: [
+                    { item: "Descent Power", check: "SET" },
+                    { item: "Descent Speed", check: "MAINTAIN" },
+                    { item: "Pressurization", check: "MONITOR" },
+                    { item: "Landing Lights", check: "ON" },
+                    { item: "Strobe Lights", check: "ON" },
+                    { item: "Anti-Ice", check: "AS REQUIRED" }
+                ]
+            },
+            {
+                title: "Approach",
+                items: [
+                    { item: "Flaps", check: "APPROACH SETTING" },
+                    { item: "Gear", check: "DOWN" },
+                    { item: "Landing Checklist", check: "COMPLETE" },
+                    { item: "Final Approach", check: "STABILIZE" },
+                    { item: "Speed", check: "MAINTAIN" },
+                    { item: "Landing Lights", check: "ON" }
+                ]
+            },
+            {
+                title: "Landing",
+                items: [
+                    { item: "Touchdown", check: "EXECUTE" },
+                    { item: "Spoilers", check: "DEPLOY" },
+                    { item: "Reverse Thrust", check: "AS REQUIRED" },
+                    { item: "Brakes", check: "APPLY" },
+                    { item: "Flaps", check: "UP" },
+                    { item: "Gear", check: "VERIFY DOWN" }
+                ]
+            },
+            {
+                title: "After Landing",
+                items: [
+                    { item: "Spoilers", check: "RETRACT" },
+                    { item: "Reverse Thrust", check: "STOW" },
+                    { item: "Taxi Speed", check: "MAINTAIN" },
+                    { item: "Landing Lights", check: "OFF" },
+                    { item: "Strobe Lights", check: "OFF" },
+                    { item: "Navigation Lights", check: "ON" }
+                ]
+            },
+            {
+                title: "Taxi to Parking",
+                items: [
+                    { item: "Taxi Lights", check: "ON" },
+                    { item: "Beacon", check: "ON" },
+                    { item: "Follow Taxi Instructions", check: "—" },
+                    { item: "Parking Position", check: "IDENTIFY" },
+                    { item: "Parking Brake", check: "SET" }
+                ]
+            },
+            {
+                title: "Shutdown",
+                items: [
+                    { item: "Bleed Air", check: "OFF" },
+                    { item: "Fuel Pumps", check: "OFF" },
+                    { item: "Avionics Master", check: "OFF" },
+                    { item: "Battery Master", check: "OFF" },
+                    { item: "All Lights", check: "OFF" },
+                    { item: "Cockpit", check: "SECURE" }
+                ]
+            },
+            {
+                title: "Post-Flight",
+                items: [
+                    { item: "Exterior Inspection", check: "COMPLETE" },
+                    { item: "Fuel Servicing", check: "IF REQUIRED" },
+                    { item: "Oil Servicing", check: "IF REQUIRED" },
+                    { item: "Maintenance Items", check: "NOTE" },
+                    { item: "Flight Log", check: "COMPLETE" },
+                    { item: "Aircraft", check: "SECURE" }
+                ]
+            }
+        ]
+
+        // App State
+        let currentStage = 0
+        let checkedItems = {}
+        let isDarkMode = localStorage.getItem('darkMode') === 'true'
+        let userScrolledManually = false
+        let scrollTimeout
+        let autoAdvanceTimeout = null
+        let countdownInterval = null
+
+        // DOM Elements
+        const stageTitle = document.getElementById('stageTitle')
+        const checklistContainer = document.getElementById('checklistContainer')
+        const stageComplete = document.getElementById('stageComplete')
+        const prevBtn = document.getElementById('prevBtn')
+        const nextBtn = document.getElementById('nextBtn')
+        const stageCounter = document.getElementById('stageCounter')
+        const progressBar = document.getElementById('progressBar')
+        const progressText = document.getElementById('progressText')
+        const themeToggle = document.getElementById('themeToggle')
+        const resetAll = document.getElementById('resetAll')
+
+        // Initialize App
+        function init() {
+            // Load saved state
+            const savedState = localStorage.getItem('cj4ChecklistState')
+            if (savedState) {
+                const state = JSON.parse(savedState)
+                currentStage = state.currentStage || 0
+                checkedItems = state.checkedItems || {}
+            }
+
+            // Set theme
+            document.documentElement.classList.toggle('dark', isDarkMode)
+            themeToggle.textContent = isDarkMode ? '☀️' : '🌙'
+
+            renderStage()
+            updateNavigation()
+            updateProgress()
+            setupScrollDetection()
+        }
+
+        // Setup scroll detection for manual scrolling
+        function setupScrollDetection() {
+            let scrollTimer
+
+            window.addEventListener('scroll', () => {
+                userScrolledManually = true
+
+                clearTimeout(scrollTimer)
+                scrollTimer = setTimeout(() => {
+                    userScrolledManually = false
+                }, 2000) // Reset flag after 2 seconds of no scrolling
+            })
+
+            // Reset on touch start (mobile)
+            window.addEventListener('touchstart', () => {
+                userScrolledManually = false
+            })
+        }
+
+        // Smart auto-scroll function
+        function autoScrollIfNeeded() {
+            // Don't auto-scroll if user manually scrolled recently
+            if (userScrolledManually) return
+
+            const viewportHeight = window.innerHeight
+            const scrollTop = window.pageYOffset
+            const scrollTriggerZone = viewportHeight * 0.7 // Trigger when 70% down viewport
+
+            // Find next unchecked item
+            const checklistItems = checklistContainer.children
+            let nextUncheckedItem = null
+
+            for (let i = 0; i < checklistItems.length; i++) {
+                const itemIndex = parseInt(checklistItems[i].dataset.itemIndex)
+                const itemId = `${currentStage}-${itemIndex}`
+
+                if (!checkedItems[itemId]) {
+                    nextUncheckedItem = checklistItems[i]
+                    break
+                }
+            }
+
+            if (nextUncheckedItem) {
+                const itemRect = nextUncheckedItem.getBoundingClientRect()
+                const itemTopInViewport = itemRect.top
+
+                // If the next unchecked item is close to bottom or below viewport
+                if (itemTopInViewport > scrollTriggerZone) {
+                    const targetScrollTop = scrollTop + itemTopInViewport - (viewportHeight * 0.3)
+
+                    window.scrollTo({
+                        top: Math.max(0, targetScrollTop),
+                        behavior: 'smooth'
+                    })
+                }
+            } else {
+                // All items checked, maybe scroll to completion message or navigation
+                const stageCompleteElement = document.getElementById('stageComplete')
+                if (stageCompleteElement && !stageCompleteElement.classList.contains('hidden')) {
+                    const completeRect = stageCompleteElement.getBoundingClientRect()
+                    if (completeRect.top > scrollTriggerZone) {
+                        stageCompleteElement.scrollIntoView({
+                            behavior: 'smooth',
+                            block: 'center'
+                        })
+                    }
+                }
+            }
+        }
+
+        // Render current stage
+        function renderStage() {
+            const stage = checklistData[currentStage]
+            stageTitle.textContent = stage.title
+
+            checklistContainer.innerHTML = ''
+
+            stage.items.forEach((item, index) => {
+                const itemId = `${currentStage}-${index}`
+                const isChecked = checkedItems[itemId] || false
+
+                const itemDiv = document.createElement('div')
+                itemDiv.className = `flex items-center p-4 rounded-lg border transition-all duration-200 cursor-pointer ${isChecked
+                    ? 'bg-green-50 dark:bg-green-900/20 border-green-300 dark:border-green-700'
+                    : 'bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-750'
+                    }`
+
+                // Add data attribute for tracking
+                itemDiv.dataset.itemIndex = index
+
+                itemDiv.innerHTML = `
+            <div class="flex items-center mr-4 flex-shrink-0">
+                <input type="checkbox" ${isChecked ? 'checked' : ''} 
+                       class="w-5 h-5 text-cessna-green dark:text-cockpit-blue rounded border-gray-300 dark:border-gray-600 focus:ring-2 focus:ring-cessna-green dark:focus:ring-cockpit-blue">
+            </div>
+            <div class="flex-1 min-w-0">
+                <div class="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-2">
+                    <span class="font-medium text-gray-900 dark:text-gray-100 break-words">${item.item}</span>
+                    <span class="text-sm font-mono text-cessna-green dark:text-cockpit-blue break-words sm:text-right">${item.check}</span>
+                </div>
+            </div>
+        `
+
+                const checkbox = itemDiv.querySelector('input[type="checkbox"]')
+
+                itemDiv.addEventListener('click', (e) => {
+                    if (e.target !== checkbox) {
+                        checkbox.checked = !checkbox.checked
+                    }
+                    toggleItem(itemId, checkbox.checked)
+                })
+
+                checkbox.addEventListener('change', (e) => {
+                    toggleItem(itemId, e.target.checked)
+                })
+
+                checklistContainer.appendChild(itemDiv)
+            })
+
+            checkStageCompletion()
+        }
+
+        // Toggle checklist item with auto-scroll and immediate visual update
+        function toggleItem(itemId, checked) {
+            checkedItems[itemId] = checked
+            saveState()
+
+            // Update visual appearance immediately
+            updateItemVisualState(itemId, checked)
+
+            checkStageCompletion()
+
+            // Auto-scroll after a short delay to allow UI to update
+            if (checked) {
+                clearTimeout(scrollTimeout)
+                scrollTimeout = setTimeout(() => {
+                    autoScrollIfNeeded()
+                }, 150)
+            }
+        }
+
+        // New function to update individual item's visual state
+        function updateItemVisualState(itemId, isChecked) {
+            const [stageIndex, itemIndex] = itemId.split('-')
+            const itemDiv = checklistContainer.children[itemIndex]
+
+            if (itemDiv) {
+                // Update the container's classes
+                if (isChecked) {
+                    itemDiv.className = 'flex items-center p-4 rounded-lg border transition-all duration-200 cursor-pointer bg-green-50 dark:bg-green-900/20 border-green-300 dark:border-green-700'
+                } else {
+                    itemDiv.className = 'flex items-center p-4 rounded-lg border transition-all duration-200 cursor-pointer bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-750'
+                }
+            }
+        }
+
+        // Check if stage is complete and handle auto-advance
+        function checkStageCompletion() {
+            const stage = checklistData[currentStage]
+            const stageItems = stage.items.length
+            let checkedCount = 0
+
+            for (let i = 0; i < stageItems; i++) {
+                const itemId = `${currentStage}-${i}`
+                if (checkedItems[itemId]) checkedCount++
+            }
+
+            const isComplete = checkedCount === stageItems
+            const wasCompleteAlready = !stageComplete.classList.contains('hidden')
+
+            stageComplete.classList.toggle('hidden', !isComplete)
+
+            if (isComplete && !wasCompleteAlready) {
+                // Stage just completed - start auto-advance if not on last stage
+                if (currentStage < checklistData.length - 1) {
+                    startAutoAdvance()
+                }
+
+                // Auto-scroll to completion message when stage is complete
+                if (!userScrolledManually) {
+                    setTimeout(() => {
+                        stageComplete.scrollIntoView({
+                            behavior: 'smooth',
+                            block: 'center'
+                        })
+                    }, 300)
+                }
+            } else if (!isComplete) {
+                // Stage no longer complete - cancel auto-advance
+                cancelAutoAdvance()
+            }
+        }
+
+        // Update navigation buttons
+        function updateNavigation() {
+            prevBtn.disabled = currentStage === 0
+            nextBtn.disabled = currentStage === checklistData.length - 1
+            stageCounter.textContent = `${currentStage + 1} of ${checklistData.length}`
+        }
+
+        // Update progress bar
+        function updateProgress() {
+            const progress = ((currentStage + 1) / checklistData.length) * 100
+            progressBar.style.width = `${progress}%`
+            progressText.textContent = `${currentStage + 1}/${checklistData.length}`
+        }
+
+        // Navigate to previous stage
+        function prevStage() {
+            if (currentStage > 0) {
+                cancelAutoAdvance() // Add this line
+                currentStage--
+                renderStage()
+                updateNavigation()
+                updateProgress()
+                saveState()
+                window.scrollTo(0, 0)
+                userScrolledManually = false
+            }
+        }
+
+        // Navigate to next stage  
+        function nextStage() {
+            if (currentStage < checklistData.length - 1) {
+                cancelAutoAdvance() // Add this line
+                currentStage++
+                renderStage()
+                updateNavigation()
+                updateProgress()
+                saveState()
+                window.scrollTo(0, 0)
+                userScrolledManually = false
+            }
+        }
+
+        // Toggle theme
+        function toggleTheme() {
+            isDarkMode = !isDarkMode
+            document.documentElement.classList.toggle('dark', isDarkMode)
+            themeToggle.textContent = isDarkMode ? '☀️' : '🌙'
+            localStorage.setItem('darkMode', isDarkMode)
+        }
+
+        // Reset all progress
+        function resetAllProgress() {
+            if (confirm('Reset all checklist progress? This cannot be undone.')) {
+                checkedItems = {}
+                currentStage = 0
+                saveState()
+                renderStage()
+                updateNavigation()
+                updateProgress()
+                window.scrollTo(0, 0)
+                userScrolledManually = false
+            }
+        }
+
+        // Save state to localStorage
+        function saveState() {
+            const state = {
+                currentStage,
+                checkedItems
+            }
+            localStorage.setItem('cj4ChecklistState', JSON.stringify(state))
+        }
+
+        // Start auto-advance countdown
+        function startAutoAdvance() {
+            const autoAdvanceIndicator = document.getElementById('autoAdvanceIndicator')
+            const countdownTimer = document.getElementById('countdownTimer')
+            const cancelBtn = document.getElementById('cancelAutoAdvance')
+
+            // Show the indicator
+            autoAdvanceIndicator.classList.remove('hidden')
+
+            let timeLeft = 2
+            countdownTimer.textContent = timeLeft
+
+            // Start countdown
+            countdownInterval = setInterval(() => {
+                timeLeft--
+                countdownTimer.textContent = timeLeft
+
+                if (timeLeft <= 0) {
+                    clearInterval(countdownInterval)
+                    autoAdvanceIndicator.classList.add('hidden')
+                    nextStage() // Move to next stage
+                }
+            }, 1000)
+
+            // Set timeout as backup
+            autoAdvanceTimeout = setTimeout(() => {
+                autoAdvanceIndicator.classList.add('hidden')
+                nextStage()
+            }, 2000)
+        }
+
+        // Cancel auto-advance
+        function cancelAutoAdvance() {
+            const autoAdvanceIndicator = document.getElementById('autoAdvanceIndicator')
+
+            if (autoAdvanceTimeout) {
+                clearTimeout(autoAdvanceTimeout)
+                autoAdvanceTimeout = null
+            }
+
+            if (countdownInterval) {
+                clearInterval(countdownInterval)
+                countdownInterval = null
+            }
+
+            autoAdvanceIndicator.classList.add('hidden')
+        }
+
+        // Event Listeners
+        prevBtn.addEventListener('click', prevStage)
+        nextBtn.addEventListener('click', nextStage)
+        themeToggle.addEventListener('click', toggleTheme)
+        resetAll.addEventListener('click', resetAllProgress)
+
+        // Keyboard navigation
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowLeft') prevStage()
+            if (e.key === 'ArrowRight') nextStage()
+            if (e.key === 'Escape') window.scrollTo(0, 0)
+        })
+
+        // Initialize app when DOM is loaded
+        document.addEventListener('DOMContentLoaded', init)
+        document.getElementById('cancelAutoAdvance').addEventListener('click', cancelAutoAdvance)
+    </script>
+</body>
+
+</html>
